@@ -1,16 +1,14 @@
 const WebSocket = require("ws");
 
-const wss = new WebSocket.Server({ port:8002 })
+const wss = new WebSocket.Server({ port: process.env.PORT })
 
 const chat = []
-
 const sockets = []
 
 wss.on("connection", socket => {
 
     sockets.push(socket)
 
-    console.log(sockets)
     console.log("all conections: ",sockets.length)
     console.log("Connected!")
     socket.send(JSON.stringify(chat));
@@ -30,4 +28,4 @@ wss.on("connection", socket => {
     console.log("all conections: ",sockets.length)
     })
 })
-console.log("Running!")
+console.log("Running on " + process.env.PORT + "!");
