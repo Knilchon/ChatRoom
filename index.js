@@ -1,4 +1,8 @@
 const WebSocket = require("ws");
+const app = require("express");
+const http = require("http");
+
+const server = http.createServer();
 
 const wss = new WebSocket.Server({ port: 8000 })
 
@@ -36,3 +40,9 @@ wss.on("error",() => {
     console.log("Error!")
 })
 console.log("Running on " + 8000 + "!");
+
+server.listen(3000, () => {
+    setInterval(() => {
+        console.log("Alive!")
+      }, 10000);
+})
