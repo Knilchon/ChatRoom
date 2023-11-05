@@ -28,4 +28,11 @@ wss.on("connection", socket => {
     console.log("all conections: ",sockets.length)
     })
 })
+
+wss.on("close",() => {
+    console.log("Closed!")
+})
+wss.on("error",() => {
+    console.log("Error!")
+})
 console.log("Running on " + 8000 + "!");
