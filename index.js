@@ -1,6 +1,6 @@
 const WebSocket = require("ws");
 
-const wss = new WebSocket.Server({ port: process.env.PORT })
+const wss = new WebSocket.Server({ port: 8000 })
 
 const chat = []
 const sockets = []
@@ -28,4 +28,4 @@ wss.on("connection", socket => {
     console.log("all conections: ",sockets.length)
     })
 })
-console.log("Running on " + process.env.PORT + "!");
+console.log("Running on " + 8000 + "!");
