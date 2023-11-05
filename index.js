@@ -1,6 +1,6 @@
 const WebSocket = require("ws");
 
-const wss = new WebSocket.Server({ port:8000 })
+const wss = new WebSocket.Server({ port:8002 })
 
 const chat = []
 
