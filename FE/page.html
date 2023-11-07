@@ -109,6 +109,7 @@
             const OnSubmitHandler = () => {
                 console.log("send: ",inputField.value);
                 ws.send(nameField.value + " : " +inputField.value);
+                inputField.value = null;
             }
 
         }
