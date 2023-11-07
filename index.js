@@ -1,8 +1,13 @@
 const WebSocket = require("ws");
-// const app = require("express");
-// const http = require("http");
+const express = require("express");
+const path = require("path");
 
-// const server = http.createServer();
+const app = express();
+
+app.get("/", (req,res) => {
+    res.sendFile(path.join(__dirname,"/FE/page.html"))
+})
+
 
 const wss = new WebSocket.Server({ port: 8000 })
 
@@ -41,3 +46,5 @@ wss.on("error",() => {
 })
 console.log("Running on " + 8000 + "!");
 
+
+app.listen(8020);
