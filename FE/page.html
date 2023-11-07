@@ -2,6 +2,75 @@
 <html>
 <head>
     <title>Input Form</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            height: 100vh;
+
+        }
+
+        #outerDiv{
+            display: flex;
+            flex-direction: column;
+            height: 50%;
+            width: 50%;
+            justify-content: center;
+            background-color:rgb(24, 59, 84);
+            border: 3px solid rgb(48, 110, 132);
+            border-radius: 20px;
+            align-items: center;
+        }
+
+        .text{
+            font-family:Arial, Helvetica, sans-serif;
+            color: whitesmoke;
+        }
+
+        #messageDiv{
+            height: 100%;
+            width: 90%;
+            margin: 10px;
+            padding: 10px;
+            background-color: rgb(36, 78, 108);
+            border-radius: 15px;
+            overflow: scroll;
+        }
+
+        #inputDiv{
+            width: 90%;
+            margin: 10px;
+        } 
+
+        /* .message{
+        
+        } */
+
+        .field{
+            background-color: rgb(48, 110, 132);
+            border: none;
+            border-radius: 5px;
+        }
+
+        #submit{
+            height: 20px;
+            width: 20px;
+            border: none;
+            border-radius: 10px;
+            background-color: skyblue;
+
+        }
+
+        #submit:hover{
+            background-color: rgb(118, 152, 206);
+        }
+
+        #submit:active{
+            background-color:skyblue;
+        }
+
+    </style>
     <script>
         const ws = new WebSocket("ws://localhost:8000")
         // const ws = new WebSocket("wss://chat-sxdu.onrender.com")
@@ -10,6 +79,7 @@
             const inputField = document.getElementById("inputField");
             const button = document.getElementById("submit");
             const messageDiv = document.getElementById("messageDiv");
+            const nameField = document.getElementById("NameField");
             button.addEventListener("click",(event) => {
                 OnSubmitHandler()
                 event.preventDefault();
@@ -22,8 +92,9 @@
                 array.forEach(element => {
                     console.log(element)
                     const newParagraph = document.createElement("p");
+                    newParagraph.classList.add("text");
                     newParagraph.textContent = element;
-                    messageDiv.appendChild(newParagraph)
+                    messageDiv.prepend(newParagraph)
                 });
             });
 
@@ -31,12 +102,13 @@
                 emptyDiv();
                 const newParagraph = document.createElement("p");
                     newParagraph.textContent = "ERROR";
-                    messageDiv.appendChild(newParagraph)
+                    newParagraph.classList.add("text");
+                    messageDiv.prepend(newParagraph)
             });
 
             const OnSubmitHandler = () => {
                 console.log("send: ",inputField.value);
-                ws.send(inputField.value);
+                ws.send(nameField.value + " : " +inputField.value);
             }
 
         }
@@ -49,12 +121,17 @@
     </script>
 </head>
 <body>
-    <form>
-        <label for="inputField">Enter something:</label>
-        <input type="text" id="inputField" >
-        <button id="submit"></button>
-    </form>
-    <div id="messageDiv">
+    <div id="outerDiv">
+        <div id="messageDiv">
+        </div>
+        <form id="inputDiv">
+            <label for="inputField" class="text" >Name:</label>
+            <input type="text" id="NameField" class="field text" >
+            <label for="inputField" class="text" >Enter something:</label>
+            <input type="text" id="inputField" class="field text" >
+            <button class="text" id="submit"></button>
+        </form>
+        
     </div>
 </body>
 </html>
