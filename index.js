@@ -17,17 +17,28 @@ const sockets = []
 wss.on("connection", socket => {
 
     sockets.push(socket)
-
     console.log("all conections: ",sockets.length)
     console.log("Connected!")
-    socket.send(JSON.stringify(chat));
-    socket.on("message", data => {
 
+    const response = {
+    chat: chat,
+    users: sockets.length
+    }
+
+    sockets.forEach((sock) => {
+        sock.send(JSON.stringify(response));
+    })
+
+    socket.on("message", data => {
         chat.push('' + data)
-        console.log(chat)
+
+        const response = { 
+            chat: chat,
+            users: sockets.length
+        }
 
         sockets.forEach((sock) => {
-            sock.send(JSON.stringify(chat));
+            sock.send(JSON.stringify(response));
         })
     })
 
@@ -35,6 +46,14 @@ wss.on("connection", socket => {
     const i = sockets.indexOf(socket)
     sockets.splice(i,1)
     console.log("all conections: ",sockets.length)
+
+    const response = { 
+        chat: chat,
+        users: sockets.length
+    }
+    sockets.forEach((sock) => {
+        sock.send(JSON.stringify(response));
+    })
     })
 })
 
