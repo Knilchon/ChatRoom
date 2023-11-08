@@ -43,10 +43,6 @@
             margin: 10px;
         } 
 
-        /* .message{
-        
-        } */
-
         .field{
             background-color: rgb(48, 110, 132);
             border: none;
@@ -72,51 +68,69 @@
 
     </style>
     <script>
-        const ws = new WebSocket("ws://195.62.33.213:8000")
-        // const ws = new WebSocket("wss://chat-sxdu.onrender.com")
+        const recieveMessage = (data) => {
+            if(!data.data){
+                return;
+            }
+            const array = JSON.parse(data.data);
+            emptyDiv();
+            array.forEach(element => {
+                console.log(element)
+                const newParagraph = document.createElement("p");
+                newParagraph.classList.add("text");
+                newParagraph.textContent = element;
+                messageDiv.prepend(newParagraph)
+            });
+        }
+
+        const emptyDiv = () => {
+            while (messageDiv.firstChild) {
+                messageDiv.removeChild(messageDiv.firstChild);
+            }
+        }
+
+        const closeConnection = () => {
+            emptyDiv();
+            const newParagraph = document.createElement("p");
+            newParagraph.textContent = "ERROR";
+            newParagraph.classList.add("text");
+            messageDiv.prepend(newParagraph)
+        }
+
+        const OnSubmitHandler = (event) => {
+            console.log("send: ",inputField.value);
+            ws.send(nameField.value + " : " +inputField.value);
+            inputField.value = null;
+            event.preventDefault();
+        }
+
+        const handleOnNameChange = () => {
+            localStorage.setItem("Name",nameField.value)
+        }
 
         window.onload = () => {
+            // const ws = new WebSocket("ws://localhost:8000")
+            const ws = new WebSocket("ws://195.62.33.213:8000")
+
             const inputField = document.getElementById("inputField");
             const button = document.getElementById("submit");
             const messageDiv = document.getElementById("messageDiv");
-            const nameField = document.getElementById("NameField");
-            button.addEventListener("click",(event) => {
-                OnSubmitHandler()
-                event.preventDefault();
-            })
+            const nameField = document.getElementById("nameField");
 
-            ws.addEventListener("message",(data) => {
-                const array = JSON.parse(data.data)
-                console.log(JSON.parse(data.data))
-                emptyDiv();
-                array.forEach(element => {
-                    console.log(element)
-                    const newParagraph = document.createElement("p");
-                    newParagraph.classList.add("text");
-                    newParagraph.textContent = element;
-                    messageDiv.prepend(newParagraph)
-                });
-            });
+            nameField.addEventListener("change",handleOnNameChange)
 
-            ws.addEventListener("close",() => {
-                emptyDiv();
-                const newParagraph = document.createElement("p");
-                    newParagraph.textContent = "ERROR";
-                    newParagraph.classList.add("text");
-                    messageDiv.prepend(newParagraph)
-            });
+            nameField.value = localStorage.getItem("Name") ? localStorage.getItem("Name") : "";
 
-            const OnSubmitHandler = () => {
-                console.log("send: ",inputField.value);
-                ws.send(nameField.value + " : " +inputField.value);
-                inputField.value = null;
-            }
+            button.addEventListener("click",OnSubmitHandler)
 
-        }
+            ws.onopen = recieveMessage;
 
-        function emptyDiv() {
-            while (messageDiv.firstChild) {
-                messageDiv.removeChild(messageDiv.firstChild);
+            ws.onmessage = recieveMessage;
+
+            ws.onclose = closeConnection;
+
+            if (ws.readyState == WebSocket.OPEN ) {
+                ws = new WebSocket("ws://localhost:8000")
             }
         }
     </script>
@@ -127,7 +141,7 @@
         </div>
         <form id="inputDiv">
             <label for="inputField" class="text" >Name:</label>
-            <input type="text" id="NameField" class="field text" >
+            <input type="text" id="nameField" class="field text" >
             <label for="inputField" class="text" >Enter something:</label>
             <input type="text" id="inputField" class="field text" >
             <button class="text" id="submit"></button>
