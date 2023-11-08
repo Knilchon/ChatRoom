@@ -73,7 +73,11 @@
                 return;
             }
             const response = JSON.parse(data.data);
+            userCount.textContent = response.users;
             emptyDiv();
+            if(!response.chat){
+                return;
+            }
             response.chat.forEach(element => {
                 console.log(element)
                 const newParagraph = document.createElement("p");
@@ -82,7 +86,6 @@
                 messageDiv.prepend(newParagraph)
             });
             console.log(response.users)
-            userCount.textContent = response.users;
         }
 
         const emptyDiv = () => {
@@ -111,7 +114,7 @@
         }
 
         window.onload = () => {
-            const url = "ws://localhost:8000"
+            const url = "ws://195.62.33.213:8000"
             const ws = new WebSocket(url)
 
             const inputField = document.getElementById("inputField");
