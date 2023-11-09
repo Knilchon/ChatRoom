@@ -8,17 +8,17 @@
             justify-content: center;
             align-content: center;
             height: 100vh;
-
+            margin: 0px;
         }
 
         #outerDiv{
             display: flex;
-            height: 100%;
+            height: auto;
             width: 100%;
             flex-direction: column;
             justify-content: center;
-            background-color:rgb(24, 59, 84);
-            border: 3px solid rgb(48, 110, 132);
+            background-color:#003b61;
+            border: 3px solid #318db2;
             border-radius: 20px;
             align-items: center;
         }
@@ -33,29 +33,55 @@
             width: 90%;
             margin: 10px;
             padding: 10px;
-            background-color: rgb(36, 78, 108);
+            background-color: #046997;
             border-radius: 15px;
             overflow: scroll;
         }
 
+        #nameField{
+        margin-right: 10px;
+        }
+
         #inputDiv{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
             width: 90%;
             margin: 10px;
         } 
 
+        #userDiv{
+            display: flex;
+            flex-direction: row;
+        }
+
+        #userLabel{
+            margin-right: 5px;
+        }
+
         .field{
-            background-color: rgb(48, 110, 132);
+            background-color: 	#318db2;
             border: none;
             border-radius: 5px;
         }
 
         #submit{
+            display: flex;
+            flex-flow: row;
             height: 20px;
             width: 20px;
             border: none;
+            margin-left: 5px;
             border-radius: 10px;
-            background-color: skyblue;
+            background-color: #30b1ce;
+            align-self: center;
 
+        }
+
+        #firstDiv{
+            display: flex;
+            justify-content: space-between;
+            flex-flow: row;
         }
 
         #submit:hover{
@@ -64,6 +90,26 @@
 
         #submit:active{
             background-color:skyblue;
+        }
+
+        .time{
+            font-family:Arial, Helvetica, sans-serif;
+            font-size: small;
+            color: hwb(0 100% 0% / 0.5);
+            margin: 0px;
+        }
+
+        .unitDiv{
+            height: auto;
+            width: auto;
+            background-color: #29a4c3;
+            padding: 5px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .msg{
+            margin: 0px;
         }
 
     </style>
@@ -79,13 +125,20 @@
                 return;
             }
             response.chat.forEach(element => {
-                console.log(element)
-                const newParagraph = document.createElement("p");
-                newParagraph.classList.add("text");
-                newParagraph.textContent = element;
-                messageDiv.prepend(newParagraph)
+                const tempDiv = document.createElement("div");
+                tempDiv.classList.add("unitDiv");
+                const timeParagraph = document.createElement("p");
+                timeParagraph.classList.add("time");
+                const messageParagraph = document.createElement("p");
+                messageParagraph.classList.add("text");
+                messageParagraph.classList.add("msg");
+                console.log(element.message,element.time)
+                messageParagraph.textContent = element.message;
+                timeParagraph.textContent = element.time;
+                tempDiv.prepend(messageParagraph)
+                tempDiv.append(timeParagraph)
+                messageDiv.prepend(tempDiv)
             });
-            console.log(response.users)
         }
 
         const emptyDiv = () => {
@@ -96,10 +149,10 @@
 
         const closeConnection = () => {
             emptyDiv();
-            const newParagraph = document.createElement("p");
-            newParagraph.textContent = "ERROR";
-            newParagraph.classList.add("text");
-            messageDiv.prepend(newParagraph)
+            const messageParagraph = document.createElement("p");
+            messageParagraph.textContent = "ERROR";
+            messageParagraph.classList.add("text");
+            messageDiv.prepend(messageParagraph)
         }
 
         const OnSubmitHandler = (ws) => {
@@ -114,7 +167,8 @@
         }
 
         window.onload = () => {
-            const url = "ws://195.62.33.213:8000"
+            const isDev = false;
+            const url = isDev ? "ws://localhost:8000" : "ws://195.62.33.213:8000"
             const ws = new WebSocket(url)
 
             const inputField = document.getElementById("inputField");
@@ -146,15 +200,18 @@
         <div id="messageDiv">
         </div>
         <form id="inputDiv">
-            <label for="inputField" class="text" >Name:</label>
-            <input type="text" id="nameField" class="field text" >
-            <label for="inputField" class="text" >Enter something:</label>
-            <input type="text" id="inputField" class="field text" >
-            <button class="text" id="submit"></button>
-            <label id="userLabel" class="text">Online: </label>
-            <label id="userCount" class="text"></label>
+            <div id="firstDiv">
+                <label for="inputField" class="text" >Name:</label>
+                <input type="text" id="nameField" class="field text" >
+                <label for="inputField" class="text" >Enter something:</label>
+                <input type="text" id="inputField" class="field text" >
+                <button class="text" id="submit"></button>
+            </div>
+            <div id="userDiv">
+                <label id="userLabel" class="text">Online: </label>
+                <label id="userCount" class="text"></label>
+            </div>
         </form>
-        
     </div>
 </body>
 </html>

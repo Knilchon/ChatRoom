@@ -29,8 +29,21 @@ wss.on("connection", socket => {
         sock.send(JSON.stringify(response));
     })
 
-    socket.on("message", data => {
-        chat.push('' + data)
+    socket.on("message", message => {
+
+        var currentDate = new Date();
+
+        var currentHour = currentDate.getHours();
+        var currentMinute = currentDate.getMinutes();
+
+        var formattedTime = currentHour + ':' + (currentMinute < 10 ? '0' : '') + currentMinute;
+
+        const unit = {
+            message: '' + message,
+            time: formattedTime,
+        }
+
+        chat.push(unit)
 
         const response = { 
             chat: chat,
