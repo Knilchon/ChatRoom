@@ -33,7 +33,7 @@ wss.on("connection", socket => {
 
         var currentDate = new Date();
 
-        var currentHour = currentDate.getHours();
+        var currentHour = currentDate.getUTCHours() + 1;
         var currentMinute = currentDate.getMinutes();
 
         var formattedTime = currentHour + ':' + (currentMinute < 10 ? '0' : '') + currentMinute;
