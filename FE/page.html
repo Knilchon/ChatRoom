@@ -168,7 +168,7 @@
 
         window.onload = () => {
             const isDev = false;
-            const url = isDev ? "ws://localhost:8000" : "ws://88.214.58.169:8000"
+            const url = isDev ? "ws://localhost:8443" : "wss://88.214.58.169:8443"
             const ws = new WebSocket(url)
 
             const inputField = document.getElementById("inputField");
