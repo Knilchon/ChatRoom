@@ -12,7 +12,7 @@ const options = {
   cert: fs.readFileSync('/etc/letsencrypt/live/knilchon.mywire.org/fullchain.pem'),
 };
 
-serv.get("/", (req,res) => {
+webApp.get("/", (req,res) => {
     res.sendFile(path.join(__dirname,"/FE/page.html"))
 })
 
