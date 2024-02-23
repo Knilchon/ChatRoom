@@ -1,17 +1,26 @@
 const WebSocket = require("ws");
 const express = require("express");
 const path = require("path");
+const https = require("https");
+const fs = require("fs");
 
 const app = express();
+const serv = express();
 
-app.get("/", (req,res) => {
+const options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/knilchon.mywire.org/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/knilchon.mywire.org/fullchain.pem'),
+};
+
+serv.get("/", (req,res) => {
     res.sendFile(path.join(__dirname,"/FE/page.html"))
 })
+const server_https = https.createServer(options,serv)
+const server = https.createServer(options,app)
 
-
+//const wss = new WebSocket.Server({ server: server })
 const wss = new WebSocket.Server({ port: 8000 })
-
-const chat = []
+let chat = []
 const sockets = []
 
 wss.on("connection", socket => {
@@ -37,14 +46,16 @@ wss.on("connection", socket => {
         var currentMinute = currentDate.getMinutes();
 
         var formattedTime = currentHour + ':' + (currentMinute < 10 ? '0' : '') + currentMinute;
-
+	
         const unit = {
             message: '' + message,
             time: formattedTime,
         }
 
         chat.push(unit)
-
+	if(message.includes("deletedeletedeletepls")){
+	  chat = []
+	}
         const response = { 
             chat: chat,
             users: sockets.length
@@ -76,7 +87,12 @@ wss.on("close",() => {
 wss.on("error",() => {
     console.log("Error!")
 })
-console.log("Running on " + 8000 + "!");
 
 
-app.listen(8020);
+server.listen(8443, () => {
+  console.log(`Server running on https://knilchon.mywire.org`);
+})
+
+server_https.listen(443, () => {
+  console.log('Running!')
+})
