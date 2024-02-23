@@ -20,7 +20,7 @@ const httpsServer = https.createServer(options,webApp)
 const WsServer = https.createServer(options,wsApp)
 
 const wss = new WebSocket.Server({ server: WsServer })
-// const wss = new WebSocket.Server({ port: 8000 })
+
 let chat = []
 const sockets = []
 
@@ -91,9 +91,9 @@ wss.on("error",() => {
 
 
 WsServer.listen(8443, () => {
-  console.log(`Server running on https://knilchon.mywire.org`);
+  console.log(`WS Server running!`);
 })
 
 httpsServer.listen(443, () => {
-  console.log('Running!')
+  console.log(`Server running on https://knilchon.mywire.org`)
 })
