@@ -4,8 +4,8 @@ const path = require("path");
 const https = require("https");
 const fs = require("fs");
 
-const app = express();
-const serv = express();
+const wsApp = express();
+const webApp = express();
 
 const options = {
   key: fs.readFileSync('/etc/letsencrypt/live/knilchon.mywire.org/privkey.pem'),
@@ -15,11 +15,12 @@ const options = {
 serv.get("/", (req,res) => {
     res.sendFile(path.join(__dirname,"/FE/page.html"))
 })
-const server_https = https.createServer(options,serv)
-const server = https.createServer(options,app)
 
-//const wss = new WebSocket.Server({ server: server })
-const wss = new WebSocket.Server({ port: 8000 })
+const httpsServer = https.createServer(options,webApp)
+const WsServer = https.createServer(options,wsApp)
+
+const wss = new WebSocket.Server({ server: WsServer })
+// const wss = new WebSocket.Server({ port: 8000 })
 let chat = []
 const sockets = []
 
@@ -89,10 +90,10 @@ wss.on("error",() => {
 })
 
 
-server.listen(8443, () => {
+WsServer.listen(8443, () => {
   console.log(`Server running on https://knilchon.mywire.org`);
 })
 
-server_https.listen(443, () => {
+httpsServer.listen(443, () => {
   console.log('Running!')
 })
